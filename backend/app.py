@@ -51,12 +51,28 @@ def list_orders():
 @app.post("/orders")
 def create_order():
     data = request.json or {}
+
+    def parse_location(key: str, default_lat: float, default_lng: float) -> Location:
+        loc = data.get(key) or {}
+        try:
+            lat = float(loc.get("lat", default_lat))
+            lng = float(loc.get("lng", default_lng))
+        except (TypeError, ValueError):
+            raise ValueError(f"Invalid {key} coordinates")
+        return Location(lat=lat, lng=lng)
+
+    try:
+        pickup = parse_location("pickup", 33.6844, 73.0479)
+        dropoff = parse_location("dropoff", 33.7294, 73.0931)
+    except ValueError as exc:
+        return {"error": str(exc)}, 400
+
     new_order = Order(
         id=str(uuid.uuid4()),
-        customer=data.get("customer", "Anonymous"),
-        pickup=Location(**data.get("pickup", {"lat": 33.6844, "lng": 73.0479})),
-        dropoff=Location(**data.get("dropoff", {"lat": 33.7294, "lng": 73.0931})),
-        priority=data.get("priority", "standard"),
+        customer=str(data.get("customer", "Anonymous")),
+        pickup=pickup,
+        dropoff=dropoff,
+        priority=str(data.get("priority", "standard")),
     )
     orders.append(new_order)
     socketio.emit("order_created", asdict(new_order))
