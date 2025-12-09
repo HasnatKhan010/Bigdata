@@ -1,1 +1,32 @@
-#my new repo md
+# Real-Time Delivery System (Skeleton)
+
+This repository contains a minimal scaffold for the Islamabad real-time delivery platform with:
+- **Backend**: Flask + Socket.IO stubs for orders/drivers and routing algorithms (A*, Genetic, Greedy, UCS, CSP, Hill Climbing, BFS).
+- **Frontend**: React (Vite) + Tailwind CSS v4 + Leaflet map + Socket.IO client.
+
+## Backend
+```
+cd backend
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python app.py
+```
+The backend exposes:
+- `GET /health` healthcheck
+- `GET /orders` list in-memory orders
+- `POST /orders` create in-memory order (streams `order_created` via Socket.IO)
+- Socket.IO events: `sync_state`, `order_created`, `request_route` (uses A* stub)
+
+## Frontend
+```
+cd frontend
+npm install
+npm run dev
+```
+The map centers on Islamabad, shows live drivers/orders from the backend, and a small feed panel.
+
+## Notes
+- Algorithms are placeholders; replace stubs in `backend/algorithms/*` with real implementations.
+- Configure env vars in `backend/config.py` (Postgres/Redis URLs, CORS origins).
+- Add real persistence (SQLAlchemy + PostGIS) and background workers (Celery/Redis) as needed.

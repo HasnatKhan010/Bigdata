@@ -1,0 +1,9 @@
+Flask==3.0.0
+Flask-SocketIO==5.3.6
+eventlet==0.35.2
+python-dotenv==1.0.1
+redis==5.0.1
+celery==5.3.6
+psycopg2-binary==2.9.9
+SQLAlchemy==2.0.25
+geopy==2.4.1
